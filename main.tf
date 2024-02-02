@@ -1,28 +1,17 @@
-resource "random_pet" "rg_name" {
-  prefix = var.resource_group_name_prefix
-}
-
-resource "azurerm_resource_group" "rg" {
-  name     = random_pet.rg_name.id
+resource "azurerm_resource_group" "rg_current" {
+  name     = "rg-fond-snail"
   location = var.resource_group_location
 }
 
-resource "random_string" "container_name" {
-  length  = 25
-  lower   = true
-  upper   = false
-  special = false
-}
-
 resource "azurerm_container_group" "container" {
-  name                = "${var.container_group_name_prefix}-${random_string.container_name.result}"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = "acigroup-fns13lbb2ir3wz5xcvg9ikl66"
+  location            = azurerm_resource_group.rg_current.location
+  resource_group_name = azurerm_resource_group.rg_current.name
   ip_address_type     = "Public"
   os_type             = "Linux"
   restart_policy      = var.restart_policy
-container {
-    name   = "${var.container_name_prefix}-${random_string.container_name.result}"
+  container {
+    name   = "aci-fns13lbb2ir3wz5xcvg9ikl66"
     image  = var.image
     cpu    = var.cpu_cores
     memory = var.memory_in_gb
@@ -31,5 +20,28 @@ container {
       port     = var.port
       protocol = "TCP"
     }
+  }
+}
+
+resource "azurerm_resource_group" "rg_registry_current" {
+  name     = "myResourceGroup"
+  location = var.resource_group_location
+}
+
+resource "azurerm_container_registry" "acr" {
+  name                = "sammydemoregistry"
+  resource_group_name = azurerm_resource_group.rg_registry_current.name
+  location            = azurerm_resource_group.rg_registry_current.location
+  sku                 = "Premium"
+  admin_enabled       = false
+  georeplications {
+    location                = "East US2"
+    zone_redundancy_enabled = true
+    tags                    = {}
+  }
+  georeplications {
+    location                = "North Europe"
+    zone_redundancy_enabled = true
+    tags                    = {}
   }
 }

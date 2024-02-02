@@ -10,22 +10,13 @@ variable "resource_group_name_prefix" {
   description = "Prefix of the resource group name that's combined with a random value so name is unique in your Azure subscription."
 }
 
-variable "container_group_name_prefix" {
-  type        = string
-  description = "Prefix of the container group name that's combined with a random value so name is unique in your Azure subscription."
-  default     = "acigroup"
-}
-
-variable "container_name_prefix" {
-  type        = string
-  description = "Prefix of the container name that's combined with a random value so name is unique in your Azure subscription."
-  default     = "aci"
-}
+#container_group_name_prefix default: acigroup
+#container_name_prefix default: aci
 
 variable "image" {
   type        = string
   description = "Container image to deploy. Should be of the form repoName/imagename:tag for images stored in public Docker Hub, or a fully qualified URI for other registries. Images from private registries require additional registry credentials."
-  default     = "mcr.microsoft.com/azuredocs/aci-helloworld"
+  default     = "sammydemoregistry.azurecr.io/expressapp-docker:v1"
 }
 
 variable "port" {
